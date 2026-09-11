@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 //create variable that we want redux to store
 const initialState = {
-  loggedIn: false,
+  loggedIn: Boolean(localStorage.getItem("token")),
 };
 
 const authSlice = createSlice({

@@ -1,5 +1,6 @@
 const multer = require("multer");
 const path = require("path");
+const crypto = require("crypto");
 
 const createMulter = (uploadTo, fileSize, fileFilterFunction) => {
   const multerConfig = multer.diskStorage({
@@ -7,9 +8,8 @@ const createMulter = (uploadTo, fileSize, fileFilterFunction) => {
       cb(null, uploadTo);
     },
     filename: function (req, file, cb) {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      const fileObj = path.parse(file.originalname);
-      cb(null, `${fileObj.name}_${uniqueSuffix}${fileObj.ext}`);
+      const extension = path.extname(file.originalname).toLowerCase();
+      cb(null, `${crypto.randomUUID()}${extension}`);
     },
   });
   return multer({

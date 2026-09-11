@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    const link = `http://localhost:3000/resetpassword/${token}`;
+    const link = `${process.env.CLIENT_URL || "http://localhost:3000"}/resetpassword/${token}`;
 
     // sendEmail(
     //   process.env.EMAIL_EMAIL,

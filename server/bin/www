@@ -4,6 +4,13 @@
  * Module dependencies.
  */
 require("dotenv").config();
+const requiredEnvironment = ["MONGO_CON_STR", "JWT_KEY", "JWT_RESET_PASSWORD_KEY"];
+const missingEnvironment = requiredEnvironment.filter(
+  (key) => !process.env[key]
+);
+if (missingEnvironment.length) {
+  throw new Error(`Missing environment variables: ${missingEnvironment.join(", ")}`);
+}
 var app = require("../app");
 var debug = require("debug")("animals-server:server");
 var http = require("http");

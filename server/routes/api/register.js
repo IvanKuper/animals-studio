@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
       secretKey
     );
     console.log("here");
-    const linkToSend = `http://localhost:8000/api/confirmregister/${validatedValue.email}/${secretKey}`;
+    const linkToSend = `${process.env.SERVER_URL || "http://localhost:8000"}/api/confirmregister/${validatedValue.email}/${secretKey}`;
     await sendEmail(
       process.env.EMAIL_EMAIL,
       validatedValue.email,

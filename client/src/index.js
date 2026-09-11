@@ -16,7 +16,8 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 
 /* axios config */
-axios.defaults.baseURL = "http://localhost:8000/api";
+axios.defaults.baseURL =
+  process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 /* 
   axios will add baseUrl before each request that we will send to the server
   if we will provide the full url, then axios will ignore baseUrl

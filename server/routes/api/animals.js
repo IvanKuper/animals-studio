@@ -23,6 +23,9 @@ router.get("/", async (req, res) => {
 
 router.post("/", upload.single("animalimg"), async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ error: "animal image is required" });
+    }
     const validatedValue = await animalsValidation.addAnimalValidation(
       req.body
     );
@@ -38,7 +41,7 @@ router.post("/", upload.single("animalimg"), async (req, res) => {
     res.status(201).json(animal);
   } catch (err) {
     console.log(err);
-    res.status(400).json({ error: err });
+    res.status(400).json({ error: err.message || err });
   }
 });
 

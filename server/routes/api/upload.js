@@ -9,9 +9,10 @@ const upload = multer.createMulter(
 );
 
 router.post("/", upload.single("avatar"), function (req, res) {
-  // req.file is the `avatar` file
-  // req.body will hold the text fields, if there were any
-  console.log(req.file);
+  if (!req.file) {
+    return res.status(400).json({ error: "an image is required" });
+  }
+  res.status(201).json({ filename: req.file.filename });
 });
 
 module.exports = router;

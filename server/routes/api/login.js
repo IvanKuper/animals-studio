@@ -36,12 +36,12 @@ router.post("/", async (req, res) => {
         _id: user._id,
       },
       process.env.JWT_KEY,
-      { expiresIn: "30d" }
+      { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
     );
     //send the token to the client
     res.json({ token });
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error.message || error });
   }
 });
 

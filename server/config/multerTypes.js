@@ -68,7 +68,11 @@ const filterFileType = (file, cb, typeOptions, customTypes) => {
         allowedFormats = customTypes;
         break;
     }
-    cb(null, allowedFormats.includes(file.mimetype));
+    if (!allowedFormats || !allowedFormats.includes(file.mimetype)) {
+      cb(new Error("unsupported file type"));
+      return;
+    }
+    cb(null, true);
   } catch (err) {
     cb(new Error(err));
   }

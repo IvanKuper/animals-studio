@@ -23,6 +23,17 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // app.use("/users", usersRouter);
 app.use("/api", apiRouter);
 
+app.use((err, req, res, next) => {
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(413).json({ error: "file is too large" });
+  }
+  if (err.message === "unsupported file type") {
+    return res.status(415).json({ error: err.message });
+  }
+  console.error(err);
+  res.status(err.status || 500).json({ error: "internal server error" });
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

@@ -57,5 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
+# User-uploaded files
+uploads/*
+!uploads/.gitkeep
+
+# Office temporary lock files
+docs/~$*
+
 # next.js build output
 .next
