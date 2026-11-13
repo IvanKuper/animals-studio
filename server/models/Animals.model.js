@@ -37,7 +37,6 @@ const saveAnimal = (name, race, date, gender, img, parents) => {
       animalToSave.parents.mother = parents.mother;
     }
   }
-  console.log("animalToSave", animalToSave);
   const animal = new Animals(animalToSave);
   return animal.save();
 };

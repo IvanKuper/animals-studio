@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("../../config/jwt");
 const sendEmail = require("../../config/mailer");
-const generateRandomAlpaNum = require("../../util/generateRandonAlphaNum");
 
 const confirmForgetPasswordValidation = require("../../validation/confirmForgetPassword.validation");
 
@@ -23,12 +22,11 @@ router.post("/", async (req, res) => {
       });
       return;
     }
-    const secretKey = generateRandomAlpaNum(8);
-
     const token = await jwt.generateToken(
       {
         email: validatedValue.email,
-        secretKey,
+        // changes when the password changes, so a used link stops working
+        pv: user.password.slice(-10),
       },
       process.env.JWT_RESET_PASSWORD_KEY,
       { expiresIn: "1h" }
@@ -36,13 +34,12 @@ router.post("/", async (req, res) => {
 
     const link = `${process.env.CLIENT_URL || "http://localhost:3000"}/resetpassword/${token}`;
 
-    // sendEmail(
-    //   process.env.EMAIL_EMAIL,
-    //   validatedValue.email,
-    //   "reset password",
-    //   `<a href="${link}">click here to reset your password</a>`
-    // );
-    console.log("link", link);
+    await sendEmail(
+      process.env.EMAIL_EMAIL,
+      validatedValue.email,
+      "reset password",
+      `<a href="${link}">click here to reset your password</a>`
+    );
     res.json({ msg: "if your email exists you will receive an email" });
   } catch (error) {
     res.status(400).json({ error });

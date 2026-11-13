@@ -6,7 +6,7 @@ const OAuth2 = google.auth.OAuth2;
 const createTransporter = async () => {
   try {
     const oauth2Client = new OAuth2(
-      process.env.CLINET_ID,
+      process.env.CLIENT_ID,
       process.env.CLIENT_SECRET,
       "https://developers.google.com/oauthplayground"
     );

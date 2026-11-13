@@ -3,6 +3,9 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const fs = require("fs");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -10,7 +13,25 @@ const apiRouter = require("./routes/api");
 
 const app = express();
 
-app.use(cors());
+fs.mkdirSync(path.join(__dirname, "uploads"), { recursive: true });
+
+// The React app on another port loads images from /uploads, so allow cross-origin reads.
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+// CLIENT_URL limits browser access; unset (local dev) stays open.
+app.use(cors(process.env.CLIENT_URL ? { origin: process.env.CLIENT_URL } : undefined));
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(["/api/login", "/api/register", "/api/forgetpassword", "/api/resetpassword"], authLimiter);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

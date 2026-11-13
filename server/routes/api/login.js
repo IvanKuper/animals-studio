@@ -16,10 +16,6 @@ router.post("/", async (req, res) => {
     if (!user) {
       throw "invalid email and/or password";
     }
-    //check if user active email
-    if (!user.isMailValid) {
-      throw "please validate the email first";
-    }
     //compare password that we got from user and compare it to our hash
     const hashResult = await bcrypt.cmpHash(
       validatedValue.password,
@@ -28,6 +24,10 @@ router.post("/", async (req, res) => {
     //if hashResult this mean that the password incorrect
     if (!hashResult) {
       throw "invalid email and/or password";
+    }
+    // only after the password matched, say whether the email is confirmed
+    if (!user.isMailValid) {
+      throw "please validate the email first";
     }
 
     //create token with user id
