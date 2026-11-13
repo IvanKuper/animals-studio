@@ -1,12 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store";
 import App from "./App";
 
 test("renders the Animal Studio home page", () => {
   render(
-    <MemoryRouter>
-      <App />
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    </Provider>
   );
   expect(screen.getByRole("heading", { name: /modern\. fast\. secure\./i })).toBeInTheDocument();
 });

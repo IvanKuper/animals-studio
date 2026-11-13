@@ -300,14 +300,16 @@ button {
   color: var(--text-muted);
 }
 
-.form-control {
+.form-control,
+.form-select {
   background: rgba(255, 255, 255, 0.04) !important;
   border-color: rgba(255, 255, 255, 0.14) !important;
   color: #f5f7ff !important;
   border-radius: 14px !important;
 }
 
-.form-control:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: rgba(124, 92, 255, 0.95) !important;
   box-shadow: 0 0 0 0.2rem rgba(124, 92, 255, 0.14) !important;
   background: rgba(255, 255, 255, 0.08) !important;
@@ -379,4 +381,30 @@ button {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+
+/* Bootstrap headings default to a dark colour; the theme is dark. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text);
+}
+
+.hero-title {
+  background: linear-gradient(135deg, #ffffff, #9fb4ff 55%, #5ce1ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link.btn-link {
+  text-decoration: none;
+}
+
+.form-select option {
+  background: #0d1424;
+  color: var(--text);
 }

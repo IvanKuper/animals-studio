@@ -20,7 +20,7 @@ function App() {
       <main className="page-content">
         <ToastContainer position="top-right" />
         <Switch>
-          <Route path="/newanimal" component={NewAnimalPage} />
+          <AuthGuardRoute path="/newanimal" component={NewAnimalPage} />
           <Route path="/allanimals" component={AllAnimalsPage} />
           <Route path="/" exact component={HomePage}></Route>
           <Route path="/login" component={LoginPage} />
