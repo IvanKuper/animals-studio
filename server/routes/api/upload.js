@@ -2,13 +2,15 @@ const express = require("express");
 const router = express.Router();
 
 const multer = require("../../config/multerTypes");
+const auth = require("../../middleware/auth");
+const checkImageSignature = require("../../middleware/checkImageSignature");
 const upload = multer.createMulter(
   "uploads/",
   3000000,
   multer.allowedTypes.img
 );
 
-router.post("/", upload.single("avatar"), function (req, res) {
+router.post("/", auth, upload.single("avatar"), checkImageSignature, function (req, res) {
   if (!req.file) {
     return res.status(400).json({ error: "an image is required" });
   }

@@ -18,17 +18,14 @@ router.post("/", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.createHash(validatedValue.password);
-    console.log("here2");
     const secretKey = generateRandomAlphaNum(8);
-    console.log("here3");
 
-    const newUser = await usersModel.createUser(
+    await usersModel.createUser(
       validatedValue.name,
       validatedValue.email,
       hashedPassword,
       secretKey
     );
-    console.log("here");
     const linkToSend = `${process.env.SERVER_URL || "http://localhost:8000"}/api/confirmregister/${validatedValue.email}/${secretKey}`;
     await sendEmail(
       process.env.EMAIL_EMAIL,
@@ -37,7 +34,7 @@ router.post("/", async (req, res) => {
       linkToSend
     );
 
-    res.status(201).json(newUser);
+    res.status(201).json({ msg: "registered, check your email to confirm" });
   } catch (err) {
     // console.log(err);
     res.status(400).json({ err }); //.json(...) like send but convert the data to json

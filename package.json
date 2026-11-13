@@ -6,6 +6,7 @@
     "start:server": "npm start --prefix server",
     "start:client": "npm start --prefix client",
     "build": "npm run build --prefix client",
-    "test": "npm test --prefix client -- --watchAll=false"
+    "test": "npm test --prefix client -- --watchAll=false",
+    "test:server": "npm test --prefix server"
   }
 }

@@ -8,6 +8,8 @@ const upload = multer.createMulter(
   multer.allowedTypes.img
 );
 
+const auth = require("../../middleware/auth");
+const checkImageSignature = require("../../middleware/checkImageSignature");
 const animalsValidation = require("../../validation/animals.validation");
 const animalsSchema = require("../../models/Animals.model");
 
@@ -16,12 +18,11 @@ router.get("/", async (req, res) => {
     const animals = await animalsSchema.selectAniamls();
     res.json(animals);
   } catch (err) {
-    console.log(err);
-    res.status(400).json({ error: err });
+    res.status(400).json({ error: err.message || err });
   }
 });
 
-router.post("/", upload.single("animalimg"), async (req, res) => {
+router.post("/", auth, upload.single("animalimg"), checkImageSignature, async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: "animal image is required" });
@@ -40,7 +41,6 @@ router.post("/", upload.single("animalimg"), async (req, res) => {
     );
     res.status(201).json(animal);
   } catch (err) {
-    console.log(err);
     res.status(400).json({ error: err.message || err });
   }
 });

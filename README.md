@@ -35,3 +35,16 @@ Open `http://localhost:3000` for the development client. The API serves the late
 - `npm run start:server` starts the Express API and connects to MongoDB.
 
 Never commit `.env` files, passwords, JWT secrets, or uploaded user files.
+## Security notes
+
+- `POST /api/animals` and `POST /api/upload` need the JWT in the `x-auth-token` header. `GET /api/animals` is public.
+- Uploads accept only JPEG, PNG, GIF, WebP, AVIF and APNG, and the file header is checked as well as the MIME type. SVG is not accepted.
+- Login, register and password-reset routes are rate limited. Set `CLIENT_URL` to restrict CORS to your client origin.
+- Register confirmation and password-reset links are sent by email through Gmail OAuth. Fill `EMAIL_EMAIL`, `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` in `server/.env`; without them the email step fails and logs an error.
+
+## Tests
+
+```powershell
+npm run test:server   # API security tests, no database needed
+npm test              # React tests
+```

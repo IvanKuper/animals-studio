@@ -7,7 +7,6 @@ const loginRouter = require("./api/login");
 const forgetPasswordRouter = require("./api/forgetpassword");
 const resetPasswordRouter = require("./api/resetpassword");
 const uploadRouter = require("./api/upload");
-const sendEmail = require("../config/mailer");
 const animalsRouter = require("./api/animals");
 
 // /api/register
@@ -25,14 +24,5 @@ router.use("/upload", uploadRouter);
 // /api/animals
 router.use("/animals", animalsRouter);
 
-// /api/sendemail
-router.get("/sendemail", async (req, res) => {
-  await sendEmail(
-    process.env.EMAIL_EMAIL,
-    process.env.EMAIL_EMAIL,
-    "🦄🦄🦄",
-    "<h1>we did it!</h1>"
-  );
-});
 
 module.exports = router;

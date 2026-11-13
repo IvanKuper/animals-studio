@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const confirmForgetPasswordValidation = require("../../validation/confirmForgetPassword.validation");
+const crypto = require("crypto");
 const usersModel = require("../../models/Users.model");
 
 //localhost:8000/api/confirmregister/:email/:secretKey
@@ -15,9 +16,7 @@ router.get("/:email/:secretKey", async (req, res) => {
         secretKey:1w3d4f7j
       }
     */
-    console.log("here1");
     const user = await usersModel.findUserByEmail(validatedValue.email);
-    console.log("here2");
 
     if (!user) {
       /*
@@ -26,7 +25,9 @@ router.get("/:email/:secretKey", async (req, res) => {
       throw "something went wrong";
     }
 
-    if (user.secretKey !== validatedValue.secretKey) {
+    const a = Buffer.from(String(user.secretKey));
+    const b = Buffer.from(String(validatedValue.secretKey));
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
       /*
         the email is correct but the secret key not match
       */
@@ -34,7 +35,6 @@ router.get("/:email/:secretKey", async (req, res) => {
     }
 
     await usersModel.updateIsMailValid(validatedValue.email);
-    console.log("here3");
 
     res.json({ status: "OK" });
   } catch (error) {

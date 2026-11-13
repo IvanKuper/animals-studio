@@ -23,7 +23,6 @@ const filterFileType = (file, cb, typeOptions, customTypes) => {
           "image/gif",
           "image/jpeg",
           "image/png",
-          "image/svg+xml",
           "image/webp",
         ];
         break;
