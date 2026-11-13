@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const NewAnimalPage = () => {
   const [animalData, setAnimalData] = useState({
@@ -29,10 +30,13 @@ const NewAnimalPage = () => {
       formData.append("date", animalData.date);
       formData.append("gender", animalData.gender);
       formData.append("animalimg", animalImg);
-      const { data } = await axios.post("/animals", formData);
-      console.log("data", data);
+      await axios.post("/animals", formData);
+      toast.success("Animal added");
+      ev.target.reset();
+      setAnimalData({ name: "", race: "", date: "", gender: "" });
+      setAnimalImg({});
     } catch (er) {
-      console.log("er", er);
+      toast.error(String(er.response?.data?.error || "Could not add the animal"));
     }
   };
   return (
@@ -40,23 +44,24 @@ const NewAnimalPage = () => {
       <div className="form-card">
         <h2>Add animal</h2>
         <p className="form-intro">
-          Create a premium animal profile with an image upload.
+          Add an animal profile with a photo (JPEG, PNG, GIF or WebP, up to 3MB).
         </p>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">
-              Animal name:
+              Name
             </label>
             <input
               type="text"
               className="form-control"
               id="name"
+              required
               onChange={handleTextChange}
             />
           </div>
           <div className="mb-3">
             <label htmlFor="race" className="form-label">
-              Animal race:
+              Breed
             </label>
             <input
               type="text"
@@ -67,34 +72,42 @@ const NewAnimalPage = () => {
           </div>
           <div className="mb-3">
             <label htmlFor="date" className="form-label">
-              Animal date:
+              Date of birth
             </label>
             <input
               type="date"
               className="form-control"
               id="date"
+              required
               onChange={handleTextChange}
             />
           </div>
           <div className="mb-3">
             <label htmlFor="gender" className="form-label">
-              Animal gender:
+              Gender
             </label>
-            <input
-              type="text"
-              className="form-control"
+            <select
+              className="form-select"
               id="gender"
+              value={animalData.gender}
               onChange={handleTextChange}
-            />
+              required
+            >
+              <option value="">Choose...</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </div>
           <div className="mb-3">
             <label htmlFor="animalimg" className="form-label">
-              Default file input example
+              Photo
             </label>
             <input
               className="form-control"
               type="file"
               id="animalimg"
+              accept="image/png,image/jpeg,image/gif,image/webp"
+              required
               onChange={handleImgChange}
             />
           </div>

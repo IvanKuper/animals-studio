@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -28,9 +29,9 @@ const LoginPage = () => {
       //   console.log("data", data);
       localStorage.setItem("token", data.token);
       dispatch(authActions.login());
-      history.push("/upload");
+      history.push("/newanimal");
     } catch (err) {
-      console.log(err);
+      toast.error(String(err.response?.data?.error || "Login failed, please try again"));
     }
   };
   return (
