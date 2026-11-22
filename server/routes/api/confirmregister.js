@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const confirmForgetPasswordValidation = require("../../validation/confirmForgetPassword.validation");
+const confirmRegisterValidation = require("../../validation/confirmRegister.validation");
 const crypto = require("crypto");
 const usersModel = require("../../models/Users.model");
 
 //localhost:8000/api/confirmregister/:email/:secretKey
 router.get("/:email/:secretKey", async (req, res) => {
   try {
-    const validatedValue = await confirmForgetPasswordValidation(req.params);
+    const validatedValue = await confirmRegisterValidation(req.params);
     /*
       check if params is in the right format
       req.params = {

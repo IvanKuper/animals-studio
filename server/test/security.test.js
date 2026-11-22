@@ -96,6 +96,18 @@ test("register does not return the hash or the secret key", async () => {
   assert.equal(sent.length, 1);
 });
 
+test("the emailed confirm link confirms the account; a wrong key does not", async () => {
+  let confirmed = false;
+  users.findUserByEmail = async () => ({ secretKey: "a1b2c3d4" });
+  users.updateIsMailValid = async () => (confirmed = true);
+  const wrong = await fetch(`${base}/api/confirmregister/a@b.com/ffffffff`);
+  assert.equal(wrong.status, 400);
+  assert.equal(confirmed, false);
+  const right = await fetch(`${base}/api/confirmregister/a@b.com/a1b2c3d4`);
+  assert.equal(right.status, 200, await right.text());
+  assert.equal(confirmed, true);
+});
+
 test("login checks the password before revealing an unconfirmed email", async () => {
   users.findUserByEmail = async () => ({
     password: await bcrypt.createHash("Aa1!aaaa"),
