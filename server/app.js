@@ -37,7 +37,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static(path.join(__dirname, "build")));
+// the React build from `npm run build` (client/build); it is not kept in git
+const clientBuild = path.join(__dirname, "..", "client", "build");
+app.use(express.static(clientBuild));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.use("/", indexRouter);
@@ -56,7 +58,7 @@ app.use((err, req, res, next) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(clientBuild, "index.html"));
 });
 
 // app.use("/api/register");
