@@ -9,8 +9,9 @@ delete process.env.CLIENT_URL;
 
 // No database or real email in tests: replace the model calls and the mailer.
 const sent = [];
+let mailWorks = true;
 require.cache[require.resolve("../config/mailer")] = {
-  exports: async (from, to, subject, html) => sent.push({ to, subject, html }),
+  exports: async (from, to, subject, html) => mailWorks && sent.push({ to, subject, html }) > 0,
 };
 const animals = require("../models/Animals.model");
 const users = require("../models/Users.model");
@@ -94,6 +95,22 @@ test("register does not return the hash or the secret key", async () => {
   assert.equal(res.status, 201, text);
   assert.ok(!text.includes("HASH") && !text.includes("KEY"), text);
   assert.equal(sent.length, 1);
+});
+
+test("register fails and removes the account when the confirm email cannot be sent", async () => {
+  let removed = null;
+  users.findUserByEmail = async () => null;
+  users.createUser = async () => ({});
+  users.deleteUserByEmail = async (email) => (removed = email);
+  mailWorks = false;
+  const res = await fetch(`${base}/api/register`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ name: "Ivan", email: "c@d.com", password: "Aa1!aaaa" }),
+  });
+  mailWorks = true;
+  assert.equal(res.status, 503, await res.text());
+  assert.equal(removed, "c@d.com");
 });
 
 test("the emailed confirm link confirms the account; a wrong key does not", async () => {
