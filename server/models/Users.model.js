@@ -38,8 +38,13 @@ const updateUserPasswordByEmail = (email, hashedPassword) => {
   return Users.findOneAndUpdate({ email }, { password: hashedPassword });
 };
 
+const deleteUserByEmail = (email) => {
+  return Users.deleteOne({ email });
+};
+
 module.exports = {
   findUserByEmail,
+  deleteUserByEmail,
   createUser,
   updateIsMailValid,
   updateUserPasswordByEmail,

@@ -27,7 +27,9 @@ const RegisterPage = () => {
         theme: "colored",
       });
     } catch (err) {
-      console.log(err);
+      // the server sends a string, or a joi error with details
+      const e = err.response?.data?.err;
+      toast.error(String((typeof e === "string" ? e : e?.details?.[0]?.message) || "Registration failed, please try again"));
     }
   };
   return (

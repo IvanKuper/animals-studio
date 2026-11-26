@@ -128,7 +128,7 @@ button {
 
 .eyebrow {
   display: inline-flex;
-  color: var(--accent);
+  color: #b3a1ff;
   font-size: 0.9rem;
   letter-spacing: 0.24em;
   text-transform: uppercase;

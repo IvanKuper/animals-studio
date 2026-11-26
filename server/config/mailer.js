@@ -47,8 +47,10 @@ const sendEmail = async (from, to, subject, html) => {
       subject,
       html,
     });
+    return true;
   } catch (err) {
     console.log(err);
+    return false;
   }
 };
 

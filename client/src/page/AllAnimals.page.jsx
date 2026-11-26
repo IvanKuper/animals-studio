@@ -3,15 +3,15 @@ import { useEffect, useState } from "react";
 
 const AllAnimalsPage = () => {
   const [animals, setAnimals] = useState([]);
+  const [status, setStatus] = useState("loading");
   useEffect(() => {
     axios
       .get("/animals")
       .then(({ data }) => {
         setAnimals(data);
+        setStatus("ready");
       })
-      .catch((err) => {
-        console.log("axios err", err);
-      });
+      .catch(() => setStatus("error"));
   }, []);
   return (
     <section className="animals-page">
@@ -32,18 +32,24 @@ const AllAnimalsPage = () => {
                   src={animalItem.img}
                   className="card-img-top"
                   alt={animalItem.name}
+                  loading="lazy"
                 />
               </div>
               <div className="animal-card-body">
                 <h3>{animalItem.name}</h3>
-                <p>{animalItem.race || "Unknown race"}</p>
+                <p>
+                  {animalItem.race || "Unknown race"}
+                  {animalItem.gender ? " · " + animalItem.gender : ""}
+                </p>
               </div>
             </article>
           ))}
         </div>
       ) : (
-        <div className="empty-state">
-          No animals were found yet. Add a new animal to begin.
+        <div className="empty-state" role="status">
+          {status === "loading" && "Loading animals…"}
+          {status === "error" && "Could not load the animals. Is the API running?"}
+          {status === "ready" && "No animals were found yet. Add a new animal to begin."}
         </div>
       )}
     </section>

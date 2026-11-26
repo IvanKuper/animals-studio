@@ -27,12 +27,17 @@ router.post("/", async (req, res) => {
       secretKey
     );
     const linkToSend = `${process.env.SERVER_URL || "http://localhost:8000"}/api/confirmregister/${validatedValue.email}/${secretKey}`;
-    await sendEmail(
+    const sent = await sendEmail(
       process.env.EMAIL_EMAIL,
       validatedValue.email,
       "Please confirm your email",
       linkToSend
     );
+    if (!sent) {
+      // without the email the account can never be confirmed; remove it so the user can try again
+      await usersModel.deleteUserByEmail(validatedValue.email);
+      return res.status(503).json({ err: "could not send the confirmation email, please try again later" });
+    }
 
     res.status(201).json({ msg: "registered, check your email to confirm" });
   } catch (err) {

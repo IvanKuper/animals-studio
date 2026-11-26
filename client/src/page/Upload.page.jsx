@@ -1,22 +1,25 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const UploadPage = () => {
   const [img, setImg] = useState(null);
   const handleImgChange = (ev) => {
-    console.log(ev.target);
     if (ev.target.files.length) {
       //check if user choose image
       setImg(ev.target.files[0]); //put in state the image details
     }
   };
   const handleBtnClick = async (ev) => {
+    if (!img) return toast.warn("Choose an image first");
     try {
       const formData = new FormData();
       formData.append("avatar", img);
-      let { data } = await axios.post("/upload", formData);
-      console.log(data);
-    } catch (err) {}
+      await axios.post("/upload", formData);
+      toast.success("Image uploaded");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Upload failed, please try again");
+    }
   };
   return (
     <section className="form-page">
